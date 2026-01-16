@@ -1,0 +1,15 @@
+{
+	"manifest_version": 3,
+	"name": "Felis Beep",
+	"version": "0",
+
+	"description": "Adds BeepBox to Scratch!",
+
+	"content_scripts": [
+		{
+			"matches": ["https://scratch.mit.edu/projects/editor"],
+			"js": ["app.js"],
+			"css": ["main.css"]
+		}
+	]
+}
