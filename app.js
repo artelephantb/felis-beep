@@ -20,14 +20,7 @@ var currentTab = 0;
 var isBeepBoxOpened = false;
 
 
-function createBeepBoxUI() {
-	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
-	if (soundsEditorReference == undefined) {
-		setTimeout(createBeepBoxUI, 5);
-		return;
-	}
-
-
+function createBeepBoxEditor() {
 	const beepBoxEditor = document.createElement('iframe');
 	beepBoxEditor.id = 'beepBoxEditor';
 
@@ -40,16 +33,30 @@ function createBeepBoxUI() {
 
 	beepBoxEditor.hidden = true;
 
+	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
+	soundsEditorReference.appendChild(beepBoxEditor);
+}
 
+function createSwitchButton() {
 	const switchButton = document.createElement('button');
 	switchButton.className = 'switch-button';
 	switchButton.innerText = 'Switch Mode';
 
 	switchButton.addEventListener('click', onSwitchButtonClicked);
 
-
-	soundsEditorReference.appendChild(beepBoxEditor);
+	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
 	soundsEditorReference.appendChild(switchButton);
+}
+
+function createAllMusicUI() {
+	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
+	if (soundsEditorReference == undefined) {
+		setTimeout(createAllMusicUI, 5);
+		return;
+	}
+
+	createBeepBoxEditor();
+	createSwitchButton();
 }
 
 
@@ -86,7 +93,7 @@ function onTabChanged(newTab) {
 	currentTab = newTab;
 	if (newTab != 2) return;
 
-	createBeepBoxUI();
+	createAllMusicUI();
 }
 
 
