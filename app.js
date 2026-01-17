@@ -27,6 +27,20 @@ function createBeepBoxUI() {
 		return;
 	}
 
+
+	const beepBoxEditor = document.createElement('iframe');
+	beepBoxEditor.id = 'beepBoxEditor';
+
+	beepBoxEditor.src = browser.runtime.getURL('beepbox/app.html');
+	beepBoxEditor.height = 600;
+
+	beepBoxEditor.style.background = 'var(--editor-background)';
+	beepBoxEditor.style.border = 'none';
+	beepBoxEditor.style.borderRadius = '5px';
+
+	beepBoxEditor.hidden = true;
+
+
 	const switchButton = document.createElement('button');
 	switchButton.className = 'switch-button';
 	switchButton.innerText = 'Switch Mode';
@@ -34,6 +48,7 @@ function createBeepBoxUI() {
 	switchButton.addEventListener('click', onSwitchButtonClicked);
 
 
+	soundsEditorReference.appendChild(beepBoxEditor);
 	soundsEditorReference.appendChild(switchButton);
 }
 
@@ -45,15 +60,21 @@ function onSwitchButtonClicked() {
 	const soundWaveReference = soundsEditorReference.childNodes[1];
 	const soundControlsReference = soundsEditorReference.childNodes[2];
 
+	const beepBoxEditorReference = document.getElementById('beepBoxEditor');
+
 
 	if (isBeepBoxOpened) {
 		soundTitleReference.style.display = '';
 		soundWaveReference.style.display = '';
 		soundControlsReference.style.display = '';
+
+		beepBoxEditorReference.hidden = true;
 	} else {
 		soundTitleReference.style.display = 'none';
 		soundWaveReference.style.display = 'none';
 		soundControlsReference.style.display = 'none';
+
+		beepBoxEditorReference.hidden = false;
 	}
 
 	isBeepBoxOpened = !isBeepBoxOpened;
