@@ -1,15 +1,27 @@
-const codeTabReference = document.getElementById('tab:r0:0');
-const costumesTabReference = document.getElementById('tab:r0:1');
-const soundsTabReference = document.getElementById('tab:r0:2');
+const elementTranslations = {
+	'tab0': 'tab:r0:0',
+	'tab1': 'tab:r0:1',
+	'tab2': 'tab:r0:2',
 
-const soundsPanelReference = document.getElementById('panel:r0:2');
+	'panel0': 'panel:r0:0',
+	'panel1': 'panel:r0:1',
+	'panel2': 'panel:r0:2',
+
+	'panelEditArea': 'sound-editor_editor-container_bd-4K'
+}
+
+const codeTabReference = document.getElementById(elementTranslations['tab0']);
+const costumesTabReference = document.getElementById(elementTranslations['tab1']);
+const soundsTabReference = document.getElementById(elementTranslations['tab2']);
+
+const soundsPanelReference = document.getElementById(elementTranslations['panel2']);
 
 var currentTab = 0;
 var isBeepBoxOpened = false;
 
 
 function createBeepBoxUI() {
-	const soundsEditorReference = document.getElementsByClassName('sound-editor_editor-container_bd-4K')[0];
+	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
 	if (soundsEditorReference == undefined) {
 		setTimeout(createBeepBoxUI, 5);
 		return;
@@ -27,7 +39,7 @@ function createBeepBoxUI() {
 
 
 function onSwitchButtonClicked() {
-	const soundsEditorReference = document.getElementsByClassName('sound-editor_editor-container_bd-4K')[0];
+	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
 
 	const soundTitleReference = soundsEditorReference.childNodes[0];
 	const soundWaveReference = soundsEditorReference.childNodes[1];
