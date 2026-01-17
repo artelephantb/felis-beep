@@ -20,6 +20,34 @@ var currentTab = 0;
 var isBeepBoxOpened = false;
 
 
+function createModal(html, id) {
+	const modal = document.createElement('div');
+
+	modal.id = id;
+	modal.className = 'modal';
+
+
+	modal.innerHTML = `
+	<div class='modal-box'>
+		<button class='close'>&times;</button>
+		<div class='modal-inside'></div>
+	</div>
+	`;
+
+
+	const inside = modal.getElementsByClassName('modal-inside')[0];
+	inside.innerHTML = html;
+
+	const closeButton = modal.getElementsByClassName('close')[0];
+	closeButton.onclick = () => {
+		modal.style.display = 'none';
+	};
+
+
+	document.body.appendChild(modal);
+}
+
+
 function createEditor(placement) {
 	const beepBoxEditor = document.createElement('iframe');
 	beepBoxEditor.id = 'beepBoxEditor';
@@ -79,7 +107,9 @@ function createAllMusicUI() {
 
 function onExportButtonClicked() {console.log('Export');}
 
-function onAboutButtonClicked() {console.log('About');}
+function onAboutButtonClicked() {
+	document.getElementById('aboutModal').style.display = 'flex';
+}
 
 function onSwitchButtonClicked() {
 	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
@@ -128,3 +158,19 @@ costumesTabReference.addEventListener('click', () => onTabChanged(1));
 soundsTabReference.addEventListener('click', () => onTabChanged(2));
 
 soundsTabReference.getElementsByTagName('span')[0].innerHTML = 'Audio';
+
+
+createModal(`
+	<div>
+		<h2>Felis Beep</h2>
+		<i>Felis Beep</i> is an extension for <a href='https://www.firefox.com' target='_blank'>Firefox</a>, to add <a href='https://beepbox.co' target='_blank'>BeepBox</a> into <a href='https://scratch.mit.edu' target='_blank'>Scratch</a>!
+
+		<h2>License</h2>
+		<i>BeepBox</i> (beepbox directory and colors in main.css) are under the MIT license (see beepbox-license.txt) and the rest of the project is also under the MIT license (see license.txt).
+
+		<h2>Notice</h2>
+		<i>Felis Beep</i> is in no way affiliated nor endorsed by BeepBox, Scratch, the Scratch Foundation, or the Scratch Team.
+
+		<i>Scratch</i> is developed by the Lifelong Kindergarten Group at the MIT Media Lab. See the <a href='https://scratch.mit.edu' target='_blank'>Scratch Website</a>.
+	</div>
+`, 'aboutModal');
