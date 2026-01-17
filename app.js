@@ -20,7 +20,7 @@ var currentTab = 0;
 var isBeepBoxOpened = false;
 
 
-function createBeepBoxEditor() {
+function createEditor(placement) {
 	const beepBoxEditor = document.createElement('iframe');
 	beepBoxEditor.id = 'beepBoxEditor';
 
@@ -33,19 +33,35 @@ function createBeepBoxEditor() {
 
 	beepBoxEditor.hidden = true;
 
-	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
-	soundsEditorReference.appendChild(beepBoxEditor);
+	placement.appendChild(beepBoxEditor);
 }
 
-function createSwitchButton() {
+function createControls(placement) {
+	const controls = document.createElement('div');
+	controls.id = 'beepBoxControls';
+
+	controls.innerHTML = `
+		<button class='controls-button' id='beepBoxExportButton'>Export</button>
+		<button class='controls-button' id='beepBoxAboutButton'>About</button>
+	`;
+
+	controls.className = 'controls';
+	controls.style.display = 'none';
+
+	placement.appendChild(controls);
+
+	document.getElementById('beepBoxExportButton').addEventListener('click', onExportButtonClicked);
+	document.getElementById('beepBoxAboutButton').addEventListener('click', onAboutButtonClicked);
+}
+
+function createSwitchButton(placement) {
 	const switchButton = document.createElement('button');
 	switchButton.className = 'switch-button';
 	switchButton.innerText = 'Switch Mode';
 
 	switchButton.addEventListener('click', onSwitchButtonClicked);
 
-	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
-	soundsEditorReference.appendChild(switchButton);
+	placement.appendChild(switchButton);
 }
 
 function createAllMusicUI() {
@@ -55,10 +71,15 @@ function createAllMusicUI() {
 		return;
 	}
 
-	createBeepBoxEditor();
-	createSwitchButton();
+	createEditor(soundsEditorReference);
+	createControls(soundsEditorReference);
+	createSwitchButton(soundsEditorReference);
 }
 
+
+function onExportButtonClicked() {console.log('Export');}
+
+function onAboutButtonClicked() {console.log('About');}
 
 function onSwitchButtonClicked() {
 	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
@@ -67,6 +88,7 @@ function onSwitchButtonClicked() {
 	const soundWaveReference = soundsEditorReference.childNodes[1];
 	const soundControlsReference = soundsEditorReference.childNodes[2];
 
+	const beepBoxControls = document.getElementById('beepBoxControls');
 	const beepBoxEditorReference = document.getElementById('beepBoxEditor');
 
 
@@ -75,11 +97,15 @@ function onSwitchButtonClicked() {
 		soundWaveReference.style.display = '';
 		soundControlsReference.style.display = '';
 
+		beepBoxControls.style.display = 'none';
+
 		beepBoxEditorReference.hidden = true;
 	} else {
 		soundTitleReference.style.display = 'none';
 		soundWaveReference.style.display = 'none';
 		soundControlsReference.style.display = 'none';
+
+		beepBoxControls.style.display = '';
 
 		beepBoxEditorReference.hidden = false;
 	}

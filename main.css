@@ -130,5 +130,5 @@ code p {
 	color: var(--primary-text);
 
 	border: none;
-	border-radius: 50px;
+	border-radius: 10px;
 }
