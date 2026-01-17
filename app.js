@@ -69,8 +69,8 @@ function createControls(placement) {
 	controls.id = 'beepBoxControls';
 
 	controls.innerHTML = `
-		<button class='controls-button' id='beepBoxExportButton'>Export</button>
-		<button class='controls-button' id='beepBoxAboutButton'>About</button>
+		<button class='controls-button' id='beepBoxExportButton'>&#9874; Export</button>
+		<button class='controls-button' id='beepBoxAboutButton'>&starf; About</button>
 	`;
 
 	controls.className = 'controls';
@@ -85,7 +85,7 @@ function createControls(placement) {
 function createSwitchButton(placement) {
 	const switchButton = document.createElement('button');
 	switchButton.className = 'switch-button';
-	switchButton.innerText = 'Switch Mode';
+	switchButton.innerHTML = '&#9998; Switch Mode';
 
 	switchButton.addEventListener('click', onSwitchButtonClicked);
 
