@@ -356,6 +356,9 @@ function onLoad() {
 			<h3>Build Button</h3>
 			<p>The only button without a popup, this button <i>imports</i> the current BeepBox song into the Scratch sound layers.</p>
 
+			<h3>Popup</h3>
+			<p>Clicking the extension icon will bring up a popup of all availiable songs created <b>and saved</b> through Felis Beep.</p>
+
 			<h2>License</h2>
 			<i>BeepBox</i> (beepbox directory and colors in main.css) are under the MIT license (see <a href='https://github.com/johnnesky/beepbox/blob/main/LICENSE.md' target='_blank'>license</a>) and the rest of the project is also under the MIT license (see <a href='https://github.com/artelephantb/felis-beep/blob/main/license.txt' target='_blank'>license</a>).
 
