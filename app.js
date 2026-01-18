@@ -26,15 +26,18 @@ var currentTab = 0;
 var isBeepBoxOpened = false;
 
 
+// ****************************************************** //
+// Storage
+// ****************************************************** //
 async function saveSong(name, song) {
 	try {
 		const storage = await browser.storage.local.get();
 		const songs = storage['songs'];
 
-		songs.push([name, song]);
+		songs[name] = song;
 		browser.storage.local.set({'songs': songs});
 	} catch (error) {
-		browser.storage.local.set({'songs': [[name, song]]});
+		browser.storage.local.set({'songs': {name: song}});
 	}
 }
 
@@ -147,6 +150,7 @@ function createControls(placement) {
 
 	controls.innerHTML = `
 		<button class='controls-button' id='beepBoxSaveButton'>&#9873; Save</button>
+		<button class='controls-button' id='beepBoxLoadButton'>&#10066; Load</button>
 		<button class='controls-button' id='beepBoxBuildButton'>&#9874; Build</button>
 		<button class='controls-button' id='beepBoxAboutButton'>&starf; About</button>
 	`;
@@ -157,6 +161,7 @@ function createControls(placement) {
 	placement.appendChild(controls);
 
 	document.getElementById('beepBoxSaveButton').addEventListener('click', onSaveButtonClicked);
+	document.getElementById('beepBoxLoadButton').addEventListener('click', onLoadButtonClicked);
 	document.getElementById('beepBoxBuildButton').addEventListener('click', onBuildButtonClicked);
 	document.getElementById('beepBoxAboutButton').addEventListener('click', onAboutButtonClicked);
 }
@@ -194,14 +199,59 @@ async function onBuildButtonClicked() {
 	createSoundLayerFromURL(soundURL, 'New Song');
 }
 
+
 function onAboutButtonClicked() {
 	switchModalTab('mainModal', 'about');
 	document.getElementById('mainModal').style.display = 'flex';
 }
 
+
 function onSaveButtonClicked() {
 	switchModalTab('mainModal', 'save');
 	document.getElementById('mainModal').style.display = 'flex';
+}
+
+async function onLoadButtonClicked() {
+	switchModalTab('mainModal', 'load');
+
+	const loadOptions = document.getElementById('mainModal/load').getElementsByTagName('select')[0];
+	const songs = await getSongs();
+
+	loadOptions.innerHTML = ''; // Clear previous options
+
+	Object.keys(songs).forEach(song => {
+		songOption = document.createElement('option');
+		songOption.innerText = song;
+		songOption.value = songs[song];
+
+		loadOptions.appendChild(songOption);
+	});
+
+	document.getElementById('mainModal').style.display = 'flex';
+}
+
+
+async function onModalSaveButtonClicked() {
+	const modal = document.getElementById('mainModal');
+
+	const contentWindowReference = document.getElementById('beepBoxEditor').contentWindow;
+	const soundBase64 = await contentWindowReference.eval('getSongAsBase64')();
+
+	const songNameInput = document.getElementById('mainModal/save').getElementsByTagName('input')[0];
+
+	saveSong(songNameInput.value, soundBase64);
+	modal.style.display = 'none';
+}
+
+async function onModalLoadButtonClicked() {
+	const modal = document.getElementById('mainModal');
+
+	const contentWindowReference = document.getElementById('beepBoxEditor').contentWindow;
+	const loadOptions = document.getElementById('mainModal/load').getElementsByTagName('select')[0];
+
+	await contentWindowReference.eval('loadSongFromBase64')(loadOptions.value);
+
+	modal.style.display = 'none';
 }
 
 
@@ -269,49 +319,49 @@ function onLoad() {
 		createTabModal('mainModal');
 
 		createModalLayer(`
-			<div>
-				<h2>Felis Beep</h2>
-				<i>Felis Beep</i> is an extension for <a href='https://www.firefox.com' target='_blank'>Firefox</a>, to add <a href='https://beepbox.co' target='_blank'>BeepBox</a> into <a href='https://scratch.mit.edu' target='_blank'>Scratch</a>!
+			<h2>Felis Beep</h2>
+			<i>Felis Beep</i> is an extension for <a href='https://www.firefox.com' target='_blank'>Firefox</a>, to add <a href='https://beepbox.co' target='_blank'>BeepBox</a> into <a href='https://scratch.mit.edu' target='_blank'>Scratch</a>!
 
-				<br>
-				<code><p>Warning: Felis Beep does not save BeepBox songs and will be reset when switching tabs or closing the Scratch project, this does not apply to songs that are in the Scratch sound layers.</p></code>
+			<br>
+			<code><p>Warning: Felis Beep does not save BeepBox songs and will be reset when switching tabs or closing the Scratch project, this does not apply to songs that are in the Scratch sound layers.</p></code>
 
-				<h2>License</h2>
-				<i>BeepBox</i> (beepbox directory and colors in main.css) are under the MIT license (see <a href='https://github.com/johnnesky/beepbox/blob/main/LICENSE.md'>license</a>) and the rest of the project is also under the MIT license (see <a href='https://github.com/artelephantb/felis-beep/blob/main/license.txt'>license</a>).
+			<h2>License</h2>
+			<i>BeepBox</i> (beepbox directory and colors in main.css) are under the MIT license (see <a href='https://github.com/johnnesky/beepbox/blob/main/LICENSE.md'>license</a>) and the rest of the project is also under the MIT license (see <a href='https://github.com/artelephantb/felis-beep/blob/main/license.txt'>license</a>).
 
-				<h2>Notice</h2>
-				<i>Felis Beep</i> is in no way affiliated nor endorsed by BeepBox, Scratch, the Scratch Foundation, or the Scratch Team.
+			<h2>Notice</h2>
+			<i>Felis Beep</i> is in no way affiliated nor endorsed by BeepBox, Scratch, the Scratch Foundation, or the Scratch Team.
 
-				<i>Scratch</i> is developed by the Lifelong Kindergarten Group at the MIT Media Lab. See the <a href='https://scratch.mit.edu' target='_blank'>Scratch Website</a>.
-			</div>
+			<i>Scratch</i> is developed by the Lifelong Kindergarten Group at the MIT Media Lab. See the <a href='https://scratch.mit.edu' target='_blank'>Scratch Website</a>.
 		`, 'mainModal', 'about');
 
 		createModalLayer(`
-			<div>
-				<h2>Save</h2>
-				<i>Saves to a joint location that can be accessed through all projects.</i>
+			<h2>Save</h2>
+			<i>Saves to a joint location that can be accessed through all projects.</i>
 
-				<br>
-				<label for='songName'>Song Name:</label>
-				<input name='songName' type='text'/>
+			<br>
+			<label for='songName'>Song Name:</label>
+			<input name='songName' type='text'/>
 
-				<br>
-				<button class='controls-button'>Save</button>
-			</div>
+			<br>
+			<button class='controls-button'>Save</button>
 		`, 'mainModal', 'save');
 
-		const modal = document.getElementById('mainModal');
+		createModalLayer(`
+			<h2>Load</h2>
+			<i>Loads from a joint location that can be accessed through all projects.</i>
+
+			</br>
+			<select></select>
+
+			</br>
+			<button class='controls-button'>Load</button>
+		`, 'mainModal', 'load');
+
 		const saveButton = document.getElementById('mainModal/save').getElementsByClassName('controls-button')[0];
+		const loadButton = document.getElementById('mainModal/load').getElementsByClassName('controls-button')[0];
 
-		saveButton.addEventListener('click', async () => {
-			const contentWindowReference = document.getElementById('beepBoxEditor').contentWindow;
-			const soundBase64 = await contentWindowReference.eval('getSongAsBase64')();
-
-			const songNameInput = document.getElementById('mainModal/save').getElementsByTagName('input')[0];
-
-			saveSong(songNameInput.value, soundBase64);
-			modal.style.display = 'none';
-		});
+		saveButton.addEventListener('click', onModalSaveButtonClicked);
+		loadButton.addEventListener('click', onModalLoadButtonClicked);
 	} catch (error) {
 		console.warn(error);
 		setTimeout(onLoad, 100);

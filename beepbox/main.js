@@ -1,3 +1,5 @@
+// Copyright (c) John Nesky and contributing authors. View beepbox-license.txt for more information.
+
 class SongRenderer {
 	async* generate(song, sampleRate, enableIntro, enableOutro, loopCount) {
 		const synth = new beepbox.Synth(song);
@@ -135,6 +137,10 @@ function saveAsURL(blob) {
 
 function getSongAsBase64() {
 	return editor.doc.song.toBase64String();
+}
+
+function loadSongFromBase64(compressed) {
+	editor.doc.song.fromBase64String(compressed);
 }
 
 

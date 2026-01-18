@@ -1,3 +1,5 @@
+// Copyright (c) John Nesky and contributing authors. View beepbox-license.txt for more information.
+
 var beepbox = (function (exports) {
     'use strict';
 
