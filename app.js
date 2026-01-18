@@ -30,15 +30,17 @@ var isBeepBoxOpened = false;
 // Storage
 // ****************************************************** //
 async function saveSong(name, song) {
-	try {
-		const storage = await browser.storage.local.get();
-		const songs = storage['songs'];
+	let songs = null;
 
-		songs[name] = song;
-		browser.storage.local.set({'songs': songs});
-	} catch (error) {
-		browser.storage.local.set({'songs': {name: song}});
+	const storage = await browser.storage.local.get();
+	songs = storage['songs'];
+
+	if (songs == undefined) {
+		songs = {};
 	}
+
+	songs[name] = song;
+	browser.storage.local.set({'songs': songs});
 }
 
 async function getSongs() {
