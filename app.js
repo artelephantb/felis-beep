@@ -1,13 +1,16 @@
 const elementTranslations = {
-	'tab0': 'tab:r0:0',
-	'tab1': 'tab:r0:1',
-	'tab2': 'tab:r0:2',
+	tab0: 'tab:r0:0',
+	tab1: 'tab:r0:1',
+	tab2: 'tab:r0:2',
 
-	'panel0': 'panel:r0:0',
-	'panel1': 'panel:r0:1',
-	'panel2': 'panel:r0:2',
+	panel0: 'panel:r0:0',
+	panel1: 'panel:r0:1',
+	panel2: 'panel:r0:2',
 
-	'panelEditArea': 'sound-editor_editor-container_bd-4K'
+	panelEditArea: 'sound-editor_editor-container_bd-4K',
+
+	actionMenuButtons: 'action-menu_more-button_3chvL',
+	importActionFileInput: 'action-menu_file-input_+rlXQ'
 }
 
 const codeTabReference = document.getElementById(elementTranslations['tab0']);
@@ -18,6 +21,24 @@ const soundsPanelReference = document.getElementById(elementTranslations['panel2
 
 var currentTab = 0;
 var isBeepBoxOpened = false;
+
+
+async function createSoundLayerFromURL(url, name) {
+	const importButton = document.getElementsByClassName(elementTranslations['actionMenuButtons'])[0];
+	const importInput = importButton.getElementsByClassName(elementTranslations['importActionFileInput'])[0];
+
+	const soundBlob = await fetch(url).then(response => response.blob());
+	const soundFile = new File([soundBlob], name + '.wav', {type: 'audio/wav'});
+	const files = [soundFile];
+
+	const importFiles = new DataTransfer();
+	files.forEach(file => {
+		importFiles.items.add(file);
+	});
+
+	importInput.files = importFiles.files;
+	importInput.dispatchEvent(new Event('change', {bubbles: true}));
+}
 
 
 function createModal(html, id) {
@@ -69,7 +90,7 @@ function createControls(placement) {
 	controls.id = 'beepBoxControls';
 
 	controls.innerHTML = `
-		<button class='controls-button' id='beepBoxExportButton'>&#9874; Export</button>
+		<button class='controls-button' id='beepBoxBuildButton'>&#9874; Build</button>
 		<button class='controls-button' id='beepBoxAboutButton'>&starf; About</button>
 	`;
 
@@ -78,7 +99,7 @@ function createControls(placement) {
 
 	placement.appendChild(controls);
 
-	document.getElementById('beepBoxExportButton').addEventListener('click', onExportButtonClicked);
+	document.getElementById('beepBoxBuildButton').addEventListener('click', onBuildButtonClicked);
 	document.getElementById('beepBoxAboutButton').addEventListener('click', onAboutButtonClicked);
 }
 
@@ -105,7 +126,12 @@ function createAllMusicUI() {
 }
 
 
-function onExportButtonClicked() {console.log('Export');}
+async function onBuildButtonClicked() {
+	const contentWindow = document.getElementById('beepBoxEditor').contentWindow;
+	const soundURL = await contentWindow.eval('_exportToWav')();
+
+	createSoundLayerFromURL(soundURL, 'New Song');
+}
 
 function onAboutButtonClicked() {
 	document.getElementById('aboutModal').style.display = 'flex';
