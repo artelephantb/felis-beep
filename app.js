@@ -16,11 +16,11 @@ const elementTranslations = {
 	importActionFileInput: 'action-menu_file-input_+rlXQ'
 }
 
-const codeTabReference = document.getElementById(elementTranslations['tab0']);
-const costumesTabReference = document.getElementById(elementTranslations['tab1']);
-const soundsTabReference = document.getElementById(elementTranslations['tab2']);
+var codeTabReference = null;
+var costumesTabReference = null;
+var soundsTabReference = null;
 
-const soundsPanelReference = document.getElementById(elementTranslations['panel2']);
+var soundsPanelReference = null;
 
 var currentTab = 0;
 var isBeepBoxOpened = false;
@@ -82,6 +82,7 @@ function switchModalTab(modalId, tabLayer) {
 	});
 
 	document.getElementById(`${modalId}/${tabLayer}`).style.display = 'block';
+	modal.dataset.selectedTab = tabLayer;
 }
 
 function createModalLayer(html, modalId, layerId) {
@@ -226,40 +227,57 @@ function onTabChanged(newTab) {
 // ****************************************************** //
 // On Load
 // ****************************************************** //
-codeTabReference.addEventListener('click', () => onTabChanged(0));
-costumesTabReference.addEventListener('click', () => onTabChanged(1));
-soundsTabReference.addEventListener('click', () => onTabChanged(2));
+function onLoad() {
+	try {
+		codeTabReference = document.getElementById(elementTranslations['tab0']);
+		costumesTabReference = document.getElementById(elementTranslations['tab1']);
+		soundsTabReference = document.getElementById(elementTranslations['tab2']);
 
-soundsTabReference.getElementsByTagName('span')[0].innerHTML = 'Audio';
+		soundsPanelReference = document.getElementById(elementTranslations['panel2']);
+
+		codeTabReference.addEventListener('click', () => onTabChanged(0));
+		costumesTabReference.addEventListener('click', () => onTabChanged(1));
+		soundsTabReference.addEventListener('click', () => onTabChanged(2));
+
+		soundsTabReference.getElementsByTagName('span')[0].innerText = 'Audio';
 
 
-createTabModal('mainModal');
+		createTabModal('mainModal');
 
-createModalLayer(`
-	<div>
-		<h2>Felis Beep</h2>
-		<i>Felis Beep</i> is an extension for <a href='https://www.firefox.com' target='_blank'>Firefox</a>, to add <a href='https://beepbox.co' target='_blank'>BeepBox</a> into <a href='https://scratch.mit.edu' target='_blank'>Scratch</a>!
+		createModalLayer(`
+			<div>
+				<h2>Felis Beep</h2>
+				<i>Felis Beep</i> is an extension for <a href='https://www.firefox.com' target='_blank'>Firefox</a>, to add <a href='https://beepbox.co' target='_blank'>BeepBox</a> into <a href='https://scratch.mit.edu' target='_blank'>Scratch</a>!
 
-		<br>
-		<code><p>Warning: Felis Beep does not save BeepBox songs and will be reset when switching tabs or closing the Scratch project, this does not apply to songs that are in the Scratch sound layers.</p></code>
+				<br>
+				<code><p>Warning: Felis Beep does not save BeepBox songs and will be reset when switching tabs or closing the Scratch project, this does not apply to songs that are in the Scratch sound layers.</p></code>
 
-		<h2>License</h2>
-		<i>BeepBox</i> (beepbox directory and colors in main.css) are under the MIT license (see <a href='https://github.com/johnnesky/beepbox/blob/main/LICENSE.md'>license</a>) and the rest of the project is also under the MIT license (see <a href='https://github.com/artelephantb/felis-beep/blob/main/license.txt'>license</a>).
+				<h2>License</h2>
+				<i>BeepBox</i> (beepbox directory and colors in main.css) are under the MIT license (see <a href='https://github.com/johnnesky/beepbox/blob/main/LICENSE.md'>license</a>) and the rest of the project is also under the MIT license (see <a href='https://github.com/artelephantb/felis-beep/blob/main/license.txt'>license</a>).
 
-		<h2>Notice</h2>
-		<i>Felis Beep</i> is in no way affiliated nor endorsed by BeepBox, Scratch, the Scratch Foundation, or the Scratch Team.
+				<h2>Notice</h2>
+				<i>Felis Beep</i> is in no way affiliated nor endorsed by BeepBox, Scratch, the Scratch Foundation, or the Scratch Team.
 
-		<i>Scratch</i> is developed by the Lifelong Kindergarten Group at the MIT Media Lab. See the <a href='https://scratch.mit.edu' target='_blank'>Scratch Website</a>.
-	</div>
-`, 'mainModal', 'about');
+				<i>Scratch</i> is developed by the Lifelong Kindergarten Group at the MIT Media Lab. See the <a href='https://scratch.mit.edu' target='_blank'>Scratch Website</a>.
+			</div>
+		`, 'mainModal', 'about');
 
-createModalLayer(`
-	<div>
-		<h2>Save</h2>
-		<i>Saves to a joint location that can be accessed through all projects.</i>
+		createModalLayer(`
+			<div>
+				<h2>Save</h2>
+				<i>Saves to a joint location that can be accessed through all projects.</i>
 
-		<br>
-		<label for='songName'>Song Name:</label>
-		<input name='songName' type='text'/>
-	</div>
-`, 'mainModal', 'save');
+				<br>
+				<label for='songName'>Song Name:</label>
+				<input name='songName' type='text'/>
+			</div>
+		`, 'mainModal', 'save');
+	} catch (error) {
+		console.warn(error);
+		setTimeout(onLoad, 100);
+
+		return;
+	}
+}
+
+onLoad();
