@@ -133,6 +133,10 @@ function saveAsURL(blob) {
 	return url
 }
 
+function getSongAsBase64() {
+	return editor.doc.song.toBase64String();
+}
+
 
 
 let editor;

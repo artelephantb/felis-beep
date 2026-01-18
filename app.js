@@ -26,6 +26,30 @@ var currentTab = 0;
 var isBeepBoxOpened = false;
 
 
+async function saveSong(name, song) {
+	try {
+		const storage = await browser.storage.local.get();
+		const songs = storage['songs'];
+
+		songs.push([name, song]);
+		browser.storage.local.set({'songs': songs});
+	} catch (error) {
+		browser.storage.local.set({'songs': [[name, song]]});
+	}
+}
+
+async function getSongs() {
+	let songs = [];
+
+	try {
+		const storage = await browser.storage.local.get();
+		songs = storage['songs'];
+	} catch (error) {}
+
+	return songs;
+}
+
+
 // ****************************************************** //
 // Create Elements
 // ****************************************************** //
@@ -270,8 +294,24 @@ function onLoad() {
 				<br>
 				<label for='songName'>Song Name:</label>
 				<input name='songName' type='text'/>
+
+				<br>
+				<button class='controls-button'>Save</button>
 			</div>
 		`, 'mainModal', 'save');
+
+		const modal = document.getElementById('mainModal');
+		const saveButton = document.getElementById('mainModal/save').getElementsByClassName('controls-button')[0];
+
+		saveButton.addEventListener('click', async () => {
+			const contentWindowReference = document.getElementById('beepBoxEditor').contentWindow;
+			const soundBase64 = await contentWindowReference.eval('getSongAsBase64')();
+
+			const songNameInput = document.getElementById('mainModal/save').getElementsByTagName('input')[0];
+
+			saveSong(songNameInput.value, soundBase64);
+			modal.style.display = 'none';
+		});
 	} catch (error) {
 		console.warn(error);
 		setTimeout(onLoad, 100);
