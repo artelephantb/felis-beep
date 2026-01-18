@@ -168,3 +168,14 @@ code p {
 	height: 92%;
 	overflow: scroll;
 }
+
+.modal-close-button {
+	width: 30px;
+	height: 30px;
+
+	background-color: var(--loop-accent);
+	color: white;
+
+	border: none;
+	border-radius: 50px;
+}

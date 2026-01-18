@@ -50,7 +50,7 @@ function createModal(html, id) {
 
 	modal.innerHTML = `
 	<div class='modal-box'>
-		<button class='close'>&times;</button>
+		<button class='modal-close-button'>&times;</button>
 		<div class='modal-inside'></div>
 	</div>
 	`;
@@ -59,7 +59,7 @@ function createModal(html, id) {
 	const inside = modal.getElementsByClassName('modal-inside')[0];
 	inside.innerHTML = html;
 
-	const closeButton = modal.getElementsByClassName('close')[0];
+	const closeButton = modal.getElementsByClassName('modal-close-button')[0];
 	closeButton.onclick = () => {
 		modal.style.display = 'none';
 	};
@@ -175,6 +175,7 @@ function onTabChanged(newTab) {
 	currentTab = newTab;
 	if (newTab != 2) return;
 
+	isBeepBoxOpened = false;
 	createAllMusicUI();
 }
 
@@ -192,7 +193,7 @@ createModal(`
 		<i>Felis Beep</i> is an extension for <a href='https://www.firefox.com' target='_blank'>Firefox</a>, to add <a href='https://beepbox.co' target='_blank'>BeepBox</a> into <a href='https://scratch.mit.edu' target='_blank'>Scratch</a>!
 
 		<h2>License</h2>
-		<i>BeepBox</i> (beepbox directory and colors in main.css) are under the MIT license (see beepbox-license.txt) and the rest of the project is also under the MIT license (see license.txt).
+		<i>BeepBox</i> (beepbox directory and colors in main.css) are under the MIT license (see <a href='https://github.com/johnnesky/beepbox/blob/main/LICENSE.md'>license</a>) and the rest of the project is also under the MIT license (see <a href='https://github.com/artelephantb/felis-beep/blob/main/license.txt'>license</a>).
 
 		<h2>Notice</h2>
 		<i>Felis Beep</i> is in no way affiliated nor endorsed by BeepBox, Scratch, the Scratch Foundation, or the Scratch Team.
