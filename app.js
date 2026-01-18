@@ -166,6 +166,21 @@ function createControls(placement) {
 	document.getElementById('beepBoxAboutButton').addEventListener('click', onAboutButtonClicked);
 }
 
+function createWarningCard(placement) {
+	const warningCard = document.createElement('div');
+	warningCard.className = 'warning-card';
+	warningCard.id = 'beepBoxWarning';
+
+	warningCard.innerHTML = `
+		<h1>Warning</h1>
+		<p>Always press the Save button (right above this message) after <b>every change</b>. (The UI will be reset when exiting projects or changing tabs)</p>
+	`;
+
+	warningCard.style.display = 'none';
+
+	placement.appendChild(warningCard);
+}
+
 function createSwitchButton(placement) {
 	const switchButton = document.createElement('button');
 	switchButton.className = 'switch-button';
@@ -185,6 +200,7 @@ function createAllMusicUI() {
 
 	createEditor(soundsEditorReference);
 	createControls(soundsEditorReference);
+	createWarningCard(soundsEditorReference);
 	createSwitchButton(soundsEditorReference);
 }
 
@@ -265,6 +281,8 @@ function onSwitchButtonClicked() {
 	const beepBoxControls = document.getElementById('beepBoxControls');
 	const beepBoxEditorReference = document.getElementById('beepBoxEditor');
 
+	const beepBoxWarningReference = document.getElementById('beepBoxWarning');
+
 
 	if (isBeepBoxOpened) {
 		soundTitleReference.style.display = '';
@@ -272,6 +290,7 @@ function onSwitchButtonClicked() {
 		soundControlsReference.style.display = '';
 
 		beepBoxControls.style.display = 'none';
+		beepBoxWarningReference.style.display = 'none';
 
 		beepBoxEditorReference.hidden = true;
 	} else {
@@ -280,8 +299,10 @@ function onSwitchButtonClicked() {
 		soundControlsReference.style.display = 'none';
 
 		beepBoxControls.style.display = '';
+		beepBoxWarningReference.style.display = '';
 
 		beepBoxEditorReference.hidden = false;
+		beepBoxWarningReference.hidden = false;
 	}
 
 	isBeepBoxOpened = !isBeepBoxOpened;
@@ -321,9 +342,6 @@ function onLoad() {
 		createModalLayer(`
 			<h2>Felis Beep</h2>
 			<i>Felis Beep</i> is an extension for <a href='https://www.firefox.com' target='_blank'>Firefox</a>, to add <a href='https://beepbox.co' target='_blank'>BeepBox</a> into <a href='https://scratch.mit.edu' target='_blank'>Scratch</a>!
-
-			<br>
-			<code><p>Warning: Felis Beep does not save BeepBox songs and will be reset when switching tabs or closing the Scratch project, this does not apply to songs that are in the Scratch sound layers.</p></code>
 
 			<h2>License</h2>
 			<i>BeepBox</i> (beepbox directory and colors in main.css) are under the MIT license (see <a href='https://github.com/johnnesky/beepbox/blob/main/LICENSE.md'>license</a>) and the rest of the project is also under the MIT license (see <a href='https://github.com/artelephantb/felis-beep/blob/main/license.txt'>license</a>).

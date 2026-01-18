@@ -1,5 +1,7 @@
 :root {
-	/* Colors come from BeepBox */
+	/* **********************************************************************************************************************
+	# BeepBox Colors - Copyright (c) John Nesky and contributing authors. View beepbox-license.txt for more information.
+	********************************************************************************************************************** */
 	--page-margin: black;
 	--editor-background: black;
 	--hover-preview: white;
@@ -178,4 +180,27 @@ code p {
 
 	border: none;
 	border-radius: 50px;
+}
+
+
+.warning-card {
+	margin-top: 16px;
+
+	background-color: var(--pitch3-primary-note);
+	border-radius: 5px;
+}
+
+.warning-card h1 {
+	color: white;
+
+	padding: 2px 10px 2px 10px;
+
+	font-size: 20px;
+	background-color: var(--pitch3-secondary-note);
+
+	border-radius: 5px 5px 0 0;
+}
+
+.warning-card p {
+	padding: 0 10px 0 10px;
 }
