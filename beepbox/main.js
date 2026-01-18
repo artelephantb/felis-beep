@@ -141,8 +141,10 @@ function getSongAsBase64() {
 
 function loadSongFromBase64(compressed) {
 	editor.doc.song.fromBase64String(compressed);
-}
 
+	editor.whenUpdated();
+	editor._loopEditor._render();
+}
 
 
 let editor;
