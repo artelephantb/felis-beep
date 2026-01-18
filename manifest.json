@@ -5,8 +5,13 @@
 
 	"description": "Adds BeepBox to Scratch!",
 
+	"icons": {
+		"128": "icons/128.svg"
+	},
+
 	"browser_action": {
 		"default_title": "Felis Beep",
+		"default_icon": "icons/128.svg",
 		"default_popup": "popup/app.html"
 	},
 
