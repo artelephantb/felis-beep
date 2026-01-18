@@ -7,11 +7,12 @@
 
 	"content_scripts": [
 		{
-			"matches": ["https://scratch.mit.edu/projects/editor", "https://scratch.mit.edu/projects/editor/*"],
+			"matches": ["https://scratch.mit.edu/projects/*"],
 			"js": ["app.js"],
 			"css": ["main.css"]
 		}
 	],
 
-	"content_security_policy": "script-src 'self' 'unsafe-eval';"
+	"content_security_policy": "script-src 'self' 'unsafe-eval';",
+	"permissions": ["storage"]
 }

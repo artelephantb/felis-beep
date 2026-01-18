@@ -1,3 +1,6 @@
+// ****************************************************** //
+// Variables and constants
+// ****************************************************** //
 const elementTranslations = {
 	tab0: 'tab:r0:0',
 	tab1: 'tab:r0:1',
@@ -23,6 +26,9 @@ var currentTab = 0;
 var isBeepBoxOpened = false;
 
 
+// ****************************************************** //
+// Create Elements
+// ****************************************************** //
 async function createSoundLayerFromURL(url, name) {
 	const importButton = document.getElementsByClassName(elementTranslations['actionMenuButtons'])[0];
 	const importInput = importButton.getElementsByClassName(elementTranslations['importActionFileInput'])[0];
@@ -41,12 +47,13 @@ async function createSoundLayerFromURL(url, name) {
 }
 
 
-function createModal(html, id) {
+function createTabModal(id) {
 	const modal = document.createElement('div');
 
 	modal.id = id;
 	modal.className = 'modal';
 
+	modal.dataset.selectedTab = '';
 
 	modal.innerHTML = `
 	<div class='modal-box'>
@@ -56,9 +63,6 @@ function createModal(html, id) {
 	`;
 
 
-	const inside = modal.getElementsByClassName('modal-inside')[0];
-	inside.innerHTML = html;
-
 	const closeButton = modal.getElementsByClassName('modal-close-button')[0];
 	closeButton.onclick = () => {
 		modal.style.display = 'none';
@@ -66,6 +70,33 @@ function createModal(html, id) {
 
 
 	document.body.appendChild(modal);
+}
+
+function switchModalTab(modalId, tabLayer) {
+	const modal = document.getElementById(modalId);
+	const inside = modal.getElementsByClassName('modal-inside')[0];
+
+	const layers = inside.querySelectorAll('.modal-layer');
+	layers.forEach((layer) => {
+		layer.style.display = 'none';
+	});
+
+	document.getElementById(`${modalId}/${tabLayer}`).style.display = 'block';
+}
+
+function createModalLayer(html, modalId, layerId) {
+	const modal = document.getElementById(modalId);
+	const inside = modal.getElementsByClassName('modal-inside')[0];
+
+
+	const newLayer = document.createElement('div');
+	newLayer.id = `${modalId}/${layerId}`;
+	newLayer.className = 'modal-layer';
+
+	newLayer.innerHTML = html;
+
+
+	inside.appendChild(newLayer);
 }
 
 
@@ -90,6 +121,7 @@ function createControls(placement) {
 	controls.id = 'beepBoxControls';
 
 	controls.innerHTML = `
+		<button class='controls-button' id='beepBoxSaveButton'>&#9873; Save</button>
 		<button class='controls-button' id='beepBoxBuildButton'>&#9874; Build</button>
 		<button class='controls-button' id='beepBoxAboutButton'>&starf; About</button>
 	`;
@@ -99,6 +131,7 @@ function createControls(placement) {
 
 	placement.appendChild(controls);
 
+	document.getElementById('beepBoxSaveButton').addEventListener('click', onSaveButtonClicked);
 	document.getElementById('beepBoxBuildButton').addEventListener('click', onBuildButtonClicked);
 	document.getElementById('beepBoxAboutButton').addEventListener('click', onAboutButtonClicked);
 }
@@ -126,6 +159,9 @@ function createAllMusicUI() {
 }
 
 
+// ****************************************************** //
+// Events
+// ****************************************************** //
 async function onBuildButtonClicked() {
 	const contentWindow = document.getElementById('beepBoxEditor').contentWindow;
 	const soundURL = await contentWindow.eval('_exportToWav')();
@@ -134,8 +170,15 @@ async function onBuildButtonClicked() {
 }
 
 function onAboutButtonClicked() {
-	document.getElementById('aboutModal').style.display = 'flex';
+	switchModalTab('mainModal', 'about');
+	document.getElementById('mainModal').style.display = 'flex';
 }
+
+function onSaveButtonClicked() {
+	switchModalTab('mainModal', 'save');
+	document.getElementById('mainModal').style.display = 'flex';
+}
+
 
 function onSwitchButtonClicked() {
 	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
@@ -180,6 +223,9 @@ function onTabChanged(newTab) {
 }
 
 
+// ****************************************************** //
+// On Load
+// ****************************************************** //
 codeTabReference.addEventListener('click', () => onTabChanged(0));
 costumesTabReference.addEventListener('click', () => onTabChanged(1));
 soundsTabReference.addEventListener('click', () => onTabChanged(2));
@@ -187,7 +233,9 @@ soundsTabReference.addEventListener('click', () => onTabChanged(2));
 soundsTabReference.getElementsByTagName('span')[0].innerHTML = 'Audio';
 
 
-createModal(`
+createTabModal('mainModal');
+
+createModalLayer(`
 	<div>
 		<h2>Felis Beep</h2>
 		<i>Felis Beep</i> is an extension for <a href='https://www.firefox.com' target='_blank'>Firefox</a>, to add <a href='https://beepbox.co' target='_blank'>BeepBox</a> into <a href='https://scratch.mit.edu' target='_blank'>Scratch</a>!
@@ -203,4 +251,15 @@ createModal(`
 
 		<i>Scratch</i> is developed by the Lifelong Kindergarten Group at the MIT Media Lab. See the <a href='https://scratch.mit.edu' target='_blank'>Scratch Website</a>.
 	</div>
-`, 'aboutModal');
+`, 'mainModal', 'about');
+
+createModalLayer(`
+	<div>
+		<h2>Save</h2>
+		<i>Saves to a joint location that can be accessed through all projects.</i>
+
+		<br>
+		<label for='songName'>Song Name:</label>
+		<input name='songName' type='text'/>
+	</div>
+`, 'mainModal', 'save');
