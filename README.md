@@ -17,7 +17,7 @@ When pressed, the current song **will be replaced** with the desired song.
 The only button without a popup, this button *imports* the current BeepBox song into the Scratch sound layers.
 
 ### Popup
-Clicking the extension icon will bring up a popup of all availiable songs created **and saved** through Felis Beep.
+Clicking the extension icon will bring up a popup of all availiable songs created **and saved** through Felis Beep. You can open these songs in BeepBox or delete them.
 
 ## License
 *BeepBox* (`beepbox` directory and colors in `main.css`) are under the MIT license (see beepbox-license.txt) and the rest of the project is also under the MIT license (see license.txt).
