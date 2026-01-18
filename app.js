@@ -343,8 +343,21 @@ function onLoad() {
 			<h2>Felis Beep</h2>
 			<i>Felis Beep</i> is an extension for <a href='https://www.firefox.com' target='_blank'>Firefox</a>, to add <a href='https://beepbox.co' target='_blank'>BeepBox</a> into <a href='https://scratch.mit.edu' target='_blank'>Scratch</a>!
 
+			<h2>Usage</h2>
+
+			For usage in BeepBox, use the <a href='https://www.beepbox.co' target='_blank'>BeepBox website</a> (you may have to scroll down).</p>
+
+			<h3>Save Button</h3>
+			<p>This button is different from the project&#39;s save button because this is the <b>only button that can save BeepBox songs</b>. The songs are stored in a joint location that can be accessed through every project. If you try to save a song with a name that already exists, the old song will be replaced <b>without warning</b>.</p>
+
+			<h3>Load Button</h3>
+			<p>When pressed, the current song <b>will be replaced</b> with the desired song.</p>
+
+			<h3>Build Button</h3>
+			<p>The only button without a popup, this button <i>imports</i> the current BeepBox song into the Scratch sound layers.</p>
+
 			<h2>License</h2>
-			<i>BeepBox</i> (beepbox directory and colors in main.css) are under the MIT license (see <a href='https://github.com/johnnesky/beepbox/blob/main/LICENSE.md'>license</a>) and the rest of the project is also under the MIT license (see <a href='https://github.com/artelephantb/felis-beep/blob/main/license.txt'>license</a>).
+			<i>BeepBox</i> (beepbox directory and colors in main.css) are under the MIT license (see <a href='https://github.com/johnnesky/beepbox/blob/main/LICENSE.md' target='_blank'>license</a>) and the rest of the project is also under the MIT license (see <a href='https://github.com/artelephantb/felis-beep/blob/main/license.txt' target='_blank'>license</a>).
 
 			<h2>Notice</h2>
 			<i>Felis Beep</i> is in no way affiliated nor endorsed by BeepBox, Scratch, the Scratch Foundation, or the Scratch Team.
@@ -356,11 +369,11 @@ function onLoad() {
 			<h2>Save</h2>
 			<i>Saves to a joint location that can be accessed through all projects.</i>
 
-			<br>
+			<br><br>
 			<label for='songName'>Song Name:</label>
 			<input name='songName' type='text'/>
 
-			<br>
+			<br><br>
 			<button class='controls-button'>Save</button>
 		`, 'mainModal', 'save');
 
@@ -368,10 +381,10 @@ function onLoad() {
 			<h2>Load</h2>
 			<i>Loads from a joint location that can be accessed through all projects.</i>
 
-			</br>
+			</br><br>
 			<select></select>
 
-			</br>
+			</br><br>
 			<button class='controls-button'>Load</button>
 		`, 'mainModal', 'load');
 
