@@ -25,9 +25,17 @@ async function deleteSong(song) {
 
 
 getSongs().then(songs => {
+	if (songs == undefined) {
+		const noSongsMessage = document.createElement('p');
+		noSongsMessage.innerText = 'Sorry, it looks like there are no songs here. Try creating some in the Scratch editor in the Audio tab!';
+
+		document.getElementsByClassName('content')[0].appendChild(noSongsMessage);
+
+		return;
+	}
+
 	Object.keys(songs).forEach(songKey => {
 		const songItem = document.createElement('li');
-
 		songItem.innerHTML = `${songKey} <a href='${beepBoxURL}#${songs[songKey]}'><button>Open in BeepBox</button></a> <button class='delete-button';'>Delete</button><hr>`;
 
 		const deleteButton = songItem.getElementsByClassName('delete-button')[0];

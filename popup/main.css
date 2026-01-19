@@ -97,6 +97,10 @@ body {
 	margin: 0;
 }
 
+p {
+	padding: 0 10px 0 10px;
+}
+
 button {
 	padding: 5px;
 
