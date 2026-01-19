@@ -1,28 +1,6 @@
-// ****************************************************** //
-// Variables and constants
-// ****************************************************** //
-const elementTranslations = {
-	tab0: 'tab:r0:0',
-	tab1: 'tab:r0:1',
-	tab2: 'tab:r0:2',
+const soundEditorReference = document.getElementById('sound-editor');
+const soundListReference = document.getElementById('sound-list');
 
-	panel0: 'panel:r0:0',
-	panel1: 'panel:r0:1',
-	panel2: 'panel:r0:2',
-
-	panelEditArea: 'sound-editor_editor-container_bd-4K',
-
-	actionMenuButtons: 'action-menu_more-button_3chvL',
-	importActionFileInput: 'action-menu_file-input_+rlXQ'
-}
-
-var codeTabReference = null;
-var costumesTabReference = null;
-var soundsTabReference = null;
-
-var soundsPanelReference = null;
-
-var currentTab = 0;
 var isBeepBoxOpened = false;
 
 
@@ -56,26 +34,8 @@ async function getSongs() {
 
 
 // ****************************************************** //
-// Create Elements
+// Modals
 // ****************************************************** //
-async function createSoundLayerFromURL(url, name) {
-	const importButton = document.getElementsByClassName(elementTranslations['actionMenuButtons'])[0];
-	const importInput = importButton.getElementsByClassName(elementTranslations['importActionFileInput'])[0];
-
-	const soundBlob = await fetch(url).then(response => response.blob());
-	const soundFile = new File([soundBlob], name + '.wav', {type: 'audio/wav'});
-	const files = [soundFile];
-
-	const importFiles = new DataTransfer();
-	files.forEach(file => {
-		importFiles.items.add(file);
-	});
-
-	importInput.files = importFiles.files;
-	importInput.dispatchEvent(new Event('change', {bubbles: true}));
-}
-
-
 function createTabModal(id) {
 	const modal = document.createElement('div');
 
@@ -129,6 +89,26 @@ function createModalLayer(html, modalId, layerId) {
 	inside.appendChild(newLayer);
 }
 
+// ****************************************************** //
+// Editor
+// ****************************************************** //
+async function createSoundLayerFromURL(url, name) {
+	const importInput = document.getElementById('sound-file-input');
+
+	const soundBlob = await fetch(url).then(response => response.blob());
+	const soundFile = new File([soundBlob], name + '.wav', {type: 'audio/wav'});
+	const files = [soundFile];
+
+	const importFiles = new DataTransfer();
+	files.forEach(file => {
+		importFiles.items.add(file);
+	});
+
+	importInput.files = importFiles.files;
+	importInput.dispatchEvent(new Event('change', {bubbles: true}));
+
+	alert('Song built!');
+}
 
 function createEditor(placement) {
 	const beepBoxEditor = document.createElement('iframe');
@@ -140,6 +120,8 @@ function createEditor(placement) {
 	beepBoxEditor.style.background = 'var(--editor-background)';
 	beepBoxEditor.style.border = 'none';
 	beepBoxEditor.style.borderRadius = '5px';
+
+	beepBoxEditor.style.width = '100%';
 
 	beepBoxEditor.hidden = true;
 
@@ -168,21 +150,6 @@ function createControls(placement) {
 	document.getElementById('beepBoxAboutButton').addEventListener('click', onAboutButtonClicked);
 }
 
-function createWarningCard(placement) {
-	const warningCard = document.createElement('div');
-	warningCard.className = 'warning-card';
-	warningCard.id = 'beepBoxWarning';
-
-	warningCard.innerHTML = `
-		<h1>Warning</h1>
-		<p>Always press the Save button (right above this message) after <b>every change</b>. (The UI will be reset when exiting projects or changing tabs)</p>
-	`;
-
-	warningCard.style.display = 'none';
-
-	placement.appendChild(warningCard);
-}
-
 function createSwitchButton(placement) {
 	const switchButton = document.createElement('button');
 	switchButton.className = 'switch-button';
@@ -194,16 +161,14 @@ function createSwitchButton(placement) {
 }
 
 function createAllMusicUI() {
-	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
-	if (soundsEditorReference == undefined) {
+	if (soundEditorReference == undefined) {
 		setTimeout(createAllMusicUI, 5);
 		return;
 	}
 
-	createEditor(soundsEditorReference);
-	createControls(soundsEditorReference);
-	createWarningCard(soundsEditorReference);
-	createSwitchButton(soundsEditorReference);
+	createEditor(soundEditorReference);
+	createControls(soundEditorReference);
+	createSwitchButton(soundEditorReference);
 }
 
 
@@ -274,111 +239,62 @@ async function onModalLoadButtonClicked() {
 
 
 function onSwitchButtonClicked() {
-	const soundsEditorReference = document.getElementsByClassName(elementTranslations['panelEditArea'])[0];
-
-	const soundTitleReference = soundsEditorReference.childNodes[0];
-	const soundWaveReference = soundsEditorReference.childNodes[1];
-	const soundControlsReference = soundsEditorReference.childNodes[2];
-
 	const beepBoxControls = document.getElementById('beepBoxControls');
 	const beepBoxEditorReference = document.getElementById('beepBoxEditor');
 
-	const beepBoxWarningReference = document.getElementById('beepBoxWarning');
-
-
 	if (isBeepBoxOpened) {
-		soundTitleReference.style.display = '';
-		soundWaveReference.style.display = '';
-		soundControlsReference.style.display = '';
+		soundListReference.hidden = false;
 
 		beepBoxControls.style.display = 'none';
-		beepBoxWarningReference.style.display = 'none';
-
 		beepBoxEditorReference.hidden = true;
 	} else {
-		soundTitleReference.style.display = 'none';
-		soundWaveReference.style.display = 'none';
-		soundControlsReference.style.display = 'none';
+		soundListReference.hidden = true;
 
 		beepBoxControls.style.display = '';
-		beepBoxWarningReference.style.display = '';
-
 		beepBoxEditorReference.hidden = false;
-		beepBoxWarningReference.hidden = false;
 	}
 
 	isBeepBoxOpened = !isBeepBoxOpened;
-}
-
-function onTabChanged(newTab) {
-	if (newTab == currentTab) return;
-
-	currentTab = newTab;
-	if (newTab != 2) return;
-
-	isBeepBoxOpened = false;
-	createAllMusicUI();
 }
 
 
 // ****************************************************** //
 // On Load
 // ****************************************************** //
-function onLoad() {
-	try {
-		codeTabReference = document.getElementById(elementTranslations['tab0']);
-		costumesTabReference = document.getElementById(elementTranslations['tab1']);
-		soundsTabReference = document.getElementById(elementTranslations['tab2']);
-
-		soundsPanelReference = document.getElementById(elementTranslations['panel2']);
-
-		codeTabReference.addEventListener('click', () => onTabChanged(0));
-		costumesTabReference.addEventListener('click', () => onTabChanged(1));
-		soundsTabReference.addEventListener('click', () => onTabChanged(2));
-
-		soundsTabReference.getElementsByTagName('span')[0].innerText = 'Audio';
+createAllMusicUI();
 
 
-		createTabModal('mainModal');
+createTabModal('mainModal');
 
-		fetch(browser.runtime.getURL('about.html')).then(response => response.text()).then(response => {
-			createModalLayer(response, 'mainModal', 'about');
-		});
+fetch(browser.runtime.getURL('sites/scratchscript/about.html')).then(response => response.text()).then(response => {
+	createModalLayer(response, 'mainModal', 'about');
+});
 
-		createModalLayer(`
-			<h2>Save</h2>
-			<i>Saves to a joint location that can be accessed through all projects.</i>
+createModalLayer(`
+	<h2>Save</h2>
+	<i>Saves to a joint location that can be accessed through all projects.</i>
 
-			<br><br>
-			<label for='songName'>Song Name:</label>
-			<input name='songName' type='text'/>
+	<br><br>
+	<label for='songName'>Song Name:</label>
+	<input name='songName' type='text'/>
 
-			<br><br>
-			<button class='controls-button'>Save</button>
-		`, 'mainModal', 'save');
+	<br><br>
+	<button class='controls-button'>Save</button>
+`, 'mainModal', 'save');
 
-		createModalLayer(`
-			<h2>Load</h2>
-			<i>Loads from a joint location that can be accessed through all projects.</i>
+createModalLayer(`
+	<h2>Load</h2>
+	<i>Loads from a joint location that can be accessed through all projects.</i>
 
-			</br><br>
-			<select></select>
+	</br><br>
+	<select></select>
 
-			</br><br>
-			<button class='controls-button'>Load</button>
-		`, 'mainModal', 'load');
+	</br><br>
+	<button class='controls-button'>Load</button>
+`, 'mainModal', 'load');
 
-		const saveButton = document.getElementById('mainModal/save').getElementsByClassName('controls-button')[0];
-		const loadButton = document.getElementById('mainModal/load').getElementsByClassName('controls-button')[0];
+const saveButton = document.getElementById('mainModal/save').getElementsByClassName('controls-button')[0];
+const loadButton = document.getElementById('mainModal/load').getElementsByClassName('controls-button')[0];
 
-		saveButton.addEventListener('click', onModalSaveButtonClicked);
-		loadButton.addEventListener('click', onModalLoadButtonClicked);
-	} catch (error) {
-		console.warn(error);
-		setTimeout(onLoad, 100);
-
-		return;
-	}
-}
-
-onLoad();
+saveButton.addEventListener('click', onModalSaveButtonClicked);
+loadButton.addEventListener('click', onModalLoadButtonClicked);

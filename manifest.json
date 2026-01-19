@@ -18,7 +18,12 @@
 	"content_scripts": [
 		{
 			"matches": ["https://scratch.mit.edu/projects/*"],
-			"js": ["app.js"],
+			"js": ["sites/scratch/app.js"],
+			"css": ["main.css"]
+		},
+		{
+			"matches": ["https://scratchscript.quuq.dev/editor.html"],
+			"js": ["sites/scratchscript/app.js"],
 			"css": ["main.css"]
 		}
 	],

@@ -21,10 +21,13 @@ The only button without a popup, this button *imports* the current BeepBox song 
 ### Popup
 Clicking the extension icon will bring up a popup of all availiable songs created **and saved** through Felis Beep. You can open these songs in BeepBox or delete them.
 
+## Scratch Script Support
+Felis Beep can be used in [Scratch Script](https://scratchscript.quuq.dev), developed by [redspacecat](https://github.com/redspacecat).
+
 ## License
 *BeepBox* (`beepbox` directory and colors in `main.css`) are under the MIT license (see beepbox-license.txt) and the rest of the project is also under the MIT license (see license.txt).
 
 ## Notice
-*Felis Beep* is in no way affiliated nor endorsed by BeepBox, Scratch, the Scratch Foundation, or the Scratch Team.
+*Felis Beep* is in no way affiliated nor endorsed by BeepBox, Scratch Script, Scratch, the Scratch Foundation, or the Scratch Team.
 
 *Scratch* is developed by the Lifelong Kindergarten Group at the MIT Media Lab. See the [Scratch Website](https://scratch.mit.edu).
