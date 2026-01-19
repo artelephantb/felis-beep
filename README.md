@@ -1,8 +1,10 @@
 # Felis Beep
 *Felis Beep* is an extension for [Firefox](https://www.firefox.com), to add [BeepBox](https://beepbox.co) into [Scratch](https://scratch.mit.edu)!
 
+![Felis Beep Editor Screenshot](screenshots/editor.png)
+
 > [!WARNING]
-> Felis Beep does not save BeepBox songs and will be reset when switching tabs or closing the Scratch project, this does not apply to songs that are in the Scratch sound layers.
+> Felis Beep does not save BeepBox songs automatically and will be reset when switching tabs or closing the Scratch project, this does not apply to songs that are in the Scratch sound layers.
 
 ## Usage
 In the [Scratch project editor](https://scratch.mit.edu/projects/editor), the *Sounds* tab had been replaced with a *Audio* tab; The Audio tab is where the BeepBox editor is located. After pressing the *Switch Mode* button in the Audio tab, you will see the BeepBox ui and a set of controls. For usage in BeepBox, use the [BeepBox website](https://www.beepbox.co) (you may have to scroll down).
